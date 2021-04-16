@@ -7,7 +7,7 @@ import java.util.List;
 public interface Mongo {
     /**
      * description
-     * @param task 
+     * @param task
      * @author Roland
      * @version 1.0
      */
@@ -19,7 +19,7 @@ public interface Mongo {
 
     public List<Task> getAllTasks(boolean done);
 
-    public List<Task> getAllTasksByPriority();
+    public List<Task> getAllTasksByPriority(int priority);
 
     public List<Task> getAllTasksByName(String name);
 
