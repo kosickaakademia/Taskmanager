@@ -1,5 +1,6 @@
 package sk.kasv.onofrej.task.mongodb;
 
+import org.bson.types.ObjectId;
 import sk.kasv.onofrej.task.collection.Task;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public interface Mongo {
      */
     public void insertTask(Task task);
 
-    public void setTaskToDone(int id);
+    public void setTaskToDone(ObjectId id);
 
     public List<Task> getAllTasks();
 

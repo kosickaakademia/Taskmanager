@@ -16,12 +16,21 @@ public class App
     {
         System.out.println( "Hello World!" );
         //testAddNewTask();
-        printAllTasks();
+        //printAllTasks();
+        printAllTasksByPriority();
+    }
+
+    private static void printAllTasksByPriority() {
+        MongoImpl mongo = new MongoImpl();
+        List<Task> list = mongo.getAllTasksByPriority(4);
+        for(Task t: list){
+            System.out.println(t.toString());
+        }
     }
 
     private static void printAllTasks() {
         MongoImpl mongo = new MongoImpl();
-        List<Task> list = mongo.getAllTasks();
+        List<Task> list = mongo.getAllTasks(false);
         for(Task t: list){
             System.out.println(t.toString());
         }

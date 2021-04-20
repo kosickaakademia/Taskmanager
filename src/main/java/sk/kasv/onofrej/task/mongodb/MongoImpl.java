@@ -5,13 +5,16 @@ package sk.kasv.onofrej.task.mongodb;
 import com.mongodb.client.*;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.json.simple.JSONObject;
 import sk.kasv.onofrej.task.collection.Task;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class MongoImpl implements Mongo {
+import static com.mongodb.client.model.Filters.eq;
+
+public class MongoImpl implements Mongo, MongoJSON {
 
     // dbname: taksmanager
     // collection: tasks
@@ -42,7 +45,7 @@ public class MongoImpl implements Mongo {
     }
 
     @Override
-    public void setTaskToDone(int id) {
+    public void setTaskToDone(ObjectId id) {
 
     }
 
@@ -77,13 +80,63 @@ public class MongoImpl implements Mongo {
     }
 
     @Override
-    public List<Task> getAllTasks(boolean done) {
+    public List<Task> getAllTasks(boolean value) {
 
+        try{
+            MongoCollection<Document> col = getDocumentMongoCollection();
+            FindIterable<Document> cursor = col.find(eq("done",value));
+            List<Task> list = new ArrayList<>();
+            for (Document document : cursor) {
+                //System.out.println(document.toString());
+                String name = document.getString("name");
+                int priority = document.getInteger("priority");
+                boolean done = document.getBoolean("done");
+                Date date = document.getDate("date");
+                ObjectId id = document.getObjectId("_id");
+                Task task;
+                if( document.containsKey("price") ) {
+                    double price = document.getDouble("price");
+                    task= new Task(name,priority,done, date, price);
+                }else{
+                    task = new Task(name,priority,done, date);
+                }
+                task.setId(id);
+                list.add(task);
+            }
+            return list;
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
         return null;
     }
 
     @Override
-    public List<Task> getAllTasksByPriority(int priority) {
+    public List<Task> getAllTasksByPriority(int value) {
+        try{
+            MongoCollection<Document> col = getDocumentMongoCollection();
+            FindIterable<Document> cursor = col.find(eq("priority",value));
+            List<Task> list = new ArrayList<>();
+            for (Document document : cursor) {
+                //System.out.println(document.toString());
+                String name = document.getString("name");
+                int priority = document.getInteger("priority");
+                boolean done = document.getBoolean("done");
+                Date date = document.getDate("date");
+                ObjectId id = document.getObjectId("_id");
+                Task task;
+                if( document.containsKey("price") ) {
+                    double price = document.getDouble("price");
+                    task= new Task(name,priority,done, date, price);
+                }else{
+                    task = new Task(name,priority,done, date);
+                }
+                task.setId(id);
+                list.add(task);
+            }
+            return list;
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
         return null;
     }
 
@@ -95,5 +148,15 @@ public class MongoImpl implements Mongo {
     @Override
     public void DeleteDoneTasks() {
 
+    }
+
+    @Override
+    public void insertTaskJSON(JSONObject task) {
+
+    }
+
+    @Override
+    public JSONObject getAllTasksJSON() {
+        return null;
     }
 }
